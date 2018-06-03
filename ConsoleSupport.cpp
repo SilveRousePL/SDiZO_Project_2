@@ -1,7 +1,7 @@
 /*
  * ConsoleSupport.cpp
  *
- *  Created on: 2 cze 2018
+ *  Created on: 4 maj 2018
  *      Author: darek
  */
 
@@ -16,7 +16,7 @@ ConsoleSupport::~ConsoleSupport() {
 }
 
 void ConsoleSupport::start() {
-
+	int option;
 	while (to_begin) {
 		std::cout << "Generowanie grafu:" << std::endl << "1. Z pliku"
 				<< std::endl << "2. Losowy graf" << std::endl;
@@ -37,6 +37,7 @@ void ConsoleSupport::start() {
 }
 
 void ConsoleSupport::algorithms() {
+	int option;
 	while (!to_begin) {
 		std::cout << std::endl << "Wybierz algorytm:" << std::endl
 				<< "1. Algorytm Prima" << std::endl << "2. Algorytm Dijkstry"
@@ -109,29 +110,33 @@ void ConsoleSupport::algorithms() {
 }
 
 void ConsoleSupport::randomGraph() {
+	int vertex_number;
+	int density;
 	to_begin = false;
 	while (true) {
 		std::cout << "Ile wierzchołków? ";
-		std::cin >> w;
-		if (w > 1)
+		std::cin >> vertex_number;
+		if (vertex_number > 1)
 			break;
 		else
 			std::cout << "Liczba wierzchołków nie może być mniejsza niż 2"
 					<< std::endl;
 	}
-	int maxK = w * (w - 1);
-	double minG = ceil((((double) w - 1) * 100) / (double) maxK);
+	int max_edge = vertex_number * (vertex_number - 1);
+	double min_density = ceil(
+			(((double) vertex_number - 1) * 100) / (double) max_edge);
 	while (true) {
 
-		std::cout << "Podaj gęstość grafu (co najmniej " << minG << "%) ";
-		std::cin >> g;
-		if (g < minG || g > 100)
+		std::cout << "Podaj gęstość grafu (co najmniej " << min_density
+				<< "%) ";
+		std::cin >> density;
+		if (density < min_density || density > 100)
 			std::cout << "Podana gęstość nie jest dozwolona" << std::endl;
 		else
 			break;
 	}
-	double krawedzie = ceil((maxK * g) / 100);
-	graph = new Graph(w, krawedzie);
+	double edges = ceil((max_edge * density) / 100);
+	graph = new Graph(vertex_number, edges);
 	graph->randomGraph();
 }
 
@@ -160,13 +165,12 @@ void ConsoleSupport::loadFile() {
 				to_begin = true;
 			} else {
 				graph = new Graph(vertex_number, edge_number);
-				while (!handle.eof()) {
-
-					handle >> graph->K[a].wp >> graph->K[a].wk
-							>> graph->K[a].weight;
-					if (graph->K[a].wp >= vertex_number
-							|| graph->K[a].wk >= vertex_number
-							|| graph->K[a].weight < 1) {
+				while (!handle.eof() && a < edge_number) {
+					handle >> graph->E[a].vertex_begin >> graph->E[a].vertex_end
+							>> graph->E[a].weight;
+					if (graph->E[a].vertex_begin >= vertex_number
+							|| graph->E[a].vertex_end >= vertex_number
+							|| graph->E[a].weight < 1) {
 						std::cout
 								<< "Błąd wczytywania pliku: Krawędzie są nieprawidłowo określone"
 								<< std::endl;
@@ -196,11 +200,11 @@ void ConsoleSupport::loadFile() {
 						graph->adjacency_list[i] = NULL;
 
 					for (int i = 0; i < edge_number; i++) {
-						int wp = graph->K[i].wp;
-						int wk = graph->K[i].wk;
+						int wp = graph->E[i].vertex_begin;
+						int wk = graph->E[i].vertex_end;
 						list_elem = new ListElement;
-						list_elem->w = wk;
-						list_elem->waga = graph->K[i].weight;
+						list_elem->vertex = wk;
+						list_elem->weight = graph->E[i].weight;
 						list_elem->next = graph->adjacency_list[wp];
 						graph->adjacency_list[wp] = list_elem;
 						graph->incidence_matrix[wp][i] = 1;

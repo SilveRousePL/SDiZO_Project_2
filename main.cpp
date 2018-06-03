@@ -1,7 +1,7 @@
 /*
  * main.cpp
  *
- *  Created on: 2 cze 2018
+ *  Created on: 2 maj 2018
  *      Author: darek
  */
 #include <iostream>
@@ -10,6 +10,6 @@
 int main() {
 	srand(time(NULL));
 
-	ConsoleSupport ui;
-	ui.start();
+	ConsoleSupport program;
+	program.start();
 }

@@ -1,7 +1,7 @@
 /*
  * Graph.hpp
  *
- *  Created on: 2 cze 2018
+ *  Created on: 7 maj 2018
  *      Author: darek
  */
 
@@ -21,37 +21,34 @@
 
 class Graph {
 public:
-    Edge* K;
-    Edge* KO;
-    int** incidence_matrix;
-    int** incidence_matrix_non_directed;
-    ListElement** adjacency_list;
+	Edge* E;
+	Edge* EO;
+	int** incidence_matrix;
+	int** incidence_matrix_non_directed;
+	ListElement** adjacency_list;
 	ListElement** adjacency_list_non_directed;
-    int vertex_number;
-    int edge_number;
-    int density;
-	int krawedzieOdwrotne;
-    ListElement* list_elem_1;
-    ListElement* list_elem_2;
-    bool* visited;
+	int vertex_number;
+	int edge_number;
+	int non_directed_edge_number;
+	ListElement* list_elem_1;
+	ListElement* list_elem_2;
+	bool* visited;
 
-    Graph(int vertex_number, int edge_number);
-    virtual ~Graph();
+	Graph(int vertex_number, int edge_number);
+	virtual ~Graph();
 
-    void PrimaMatrix();
-    void DijkstraMatrix(int w);
-    void DFSMatrix(int w);
+	void PrimaMatrix();
+	void DijkstraMatrix(int w);
 
-    void PrimaList();
-    void DijkstraList(int w);
-    void DFSList(int w);
+	void PrimaList();
+	void DijkstraList(int w);
 
-    bool checkIntegrity();
-    void randomGraph();
-    void randomEdges();
-    void changeToNonDirected();
+	bool checkIntegrity();
+	void randomGraph();
+	void randomEdges();
+	void changeToNonDirected();
 
-    void print();
+	void print();
 };
 
 #endif /* GRAPH_HPP_ */

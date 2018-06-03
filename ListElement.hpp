@@ -1,7 +1,7 @@
 /*
  * ListElement.hpp
  *
- *  Created on: 2 cze 2018
+ *  Created on: 7 maj 2018
  *      Author: darek
  */
 
@@ -10,8 +10,8 @@
 
 class ListElement {
 public:
-    ListElement* next;
-    int w, waga;
+	ListElement* next;
+	int vertex, weight;
 };
 
 #endif /* LISTELEMENT_HPP_ */

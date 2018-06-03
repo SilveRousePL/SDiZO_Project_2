@@ -1,66 +1,65 @@
 /*
  * SpanningTree.cpp
  *
- *  Created on: 2 cze 2018
+ *  Created on: 9 maj 2018
  *      Author: darek
  */
 
 #include "SpanningTree.hpp"
 
 SpanningTree::SpanningTree(int vertex_number, int edge_number) {
-    list = new ListElement *[vertex_number];
-    for (int i = 0; i < vertex_number; i++) {
-        list[i] = nullptr;
-    }
-    list_size = vertex_number - 1;
-    weight = 0;
-    this->edge_number = edge_number;
-    edge_list = new Edge[edge_number];
-    a = 0;
+	list = new ListElement *[vertex_number];
+	for (int i = 0; i < vertex_number; i++) {
+		list[i] = nullptr;
+	}
+	list_size = vertex_number - 1;
+	weight = 0;
+	this->edge_number = edge_number;
+	edge_list = new Edge[edge_number];
+	a = 0;
 }
 
 SpanningTree::~SpanningTree() {
-    ListElement *e1, *e2;
-    for (int i = 0; i <= list_size; i++) {
-        e1 = list[i];
-        while (e1) {
-            e2 = e1;
-            e1 = e1->next;
-            delete e2;
-        }
-    }
-    delete[] list;
+	ListElement* elem_1;
+	ListElement* elem_2;
+	for (int i = 0; i <= list_size; i++) {
+		elem_1 = list[i];
+		while (elem_1) {
+			elem_2 = elem_1;
+			elem_1 = elem_1->next;
+			delete elem_2;
+		}
+	}
+	delete[] list;
 }
 
 void SpanningTree::addEdge(Edge e) {
-    ListElement *elem;
+	ListElement* elem;
 
-    weight += e.weight;
-    elem = new ListElement;
-    elem->w = e.wk;
-    elem->waga = e.weight;
-    elem->next = list[e.wp];
-    list[e.wp] = elem;
+	weight += e.weight;
+	elem = new ListElement;
+	elem->vertex = e.vertex_end;
+	elem->weight = e.weight;
+	elem->next = list[e.vertex_begin];
+	list[e.vertex_begin] = elem;
 
-    elem = new ListElement;
-    elem->w = e.wp;
-    elem->waga = e.weight;
-    elem->next = list[e.wk];
-    list[e.wk] = elem;
+	elem = new ListElement;
+	elem->vertex = e.vertex_begin;
+	elem->weight = e.weight;
+	elem->next = list[e.vertex_end];
+	list[e.vertex_end] = elem;
 
-    edge_list[a] = e;
-    a++;
+	edge_list[a] = e;
+	a++;
 }
 
 void SpanningTree::print() {
-    std::cout << std::endl;
-    for (int i = 0; i < a; i++) {
-
-    	std::cout << "Krawedz " << i + 1 << ": ";
-
-    	std::cout << edge_list[i].wp << "<-->" << edge_list[i].wk << " [" << edge_list[i].weight << "] ";
-
-    	std::cout << std::endl;
-    }
-    std::cout << std::endl << std::endl << "Waga minimalnego drzewa rozpinajacego = " << weight << std::endl << std::endl;
+	std::cout << std::endl;
+	for (int i = 0; i < a; i++) {
+		std::cout << "Krawędź " << i + 1 << ": " << edge_list[i].vertex_begin
+				<< "-" << edge_list[i].vertex_end << "   W:"
+				<< edge_list[i].weight << std::endl;
+	}
+	std::cout << "Waga minimalnego drzewa rozpinajacego: " << weight
+			<< std::endl << std::endl;
 }

@@ -1,7 +1,7 @@
 /*
  * Stack.hpp
  *
- *  Created on: 2 cze 2018
+ *  Created on: 9 maj 2018
  *      Author: darek
  */
 
@@ -27,20 +27,20 @@ public:
 	}
 
 	int top() {
-		return s->w;
+		return s->vertex;
 	}
 
 	void pop() {
 		if (s) {
-			ListElement *e = s;
+			ListElement* e = s;
 			s = s->next;
 			delete e;
 		}
 	}
 
 	void push(int w) {
-		ListElement *e = new ListElement;
-		e->w = w;
+		ListElement* e = new ListElement;
+		e->vertex = w;
 		e->next = s;
 		s = e;
 	}

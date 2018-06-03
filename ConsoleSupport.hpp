@@ -1,7 +1,7 @@
 /*
  * ConsoleSupport.hpp
  *
- *  Created on: 2 cze 2018
+ *  Created on: 4 maj 2018
  *      Author: darek
  */
 
@@ -18,14 +18,14 @@ public:
 	ConsoleSupport();
 	virtual ~ConsoleSupport();
 
-    bool to_begin = true;
-    int option, w, g, vertex_begin;
-    Graph* graph;
+	bool to_begin = true;
+	int vertex_begin;
+	Graph* graph;
 
-    void start();
-    void randomGraph();
-    void algorithms();
-    void loadFile();
+	void start();
+	void randomGraph();
+	void algorithms();
+	void loadFile();
 };
 
 #endif /* CONSOLESUPPORT_HPP_ */

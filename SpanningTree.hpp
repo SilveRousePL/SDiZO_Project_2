@@ -1,7 +1,7 @@
 /*
  * SpanningTree.hpp
  *
- *  Created on: 2 cze 2018
+ *  Created on: 9 maj 2018
  *      Author: darek
  */
 

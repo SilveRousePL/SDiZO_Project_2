@@ -1,7 +1,7 @@
 /*
  * Edge.hpp
  *
- *  Created on: 2 cze 2018
+ *  Created on: 7 maj 2018
  *      Author: darek
  */
 
@@ -10,13 +10,15 @@
 
 class Edge {
 public:
-    int wp, wk, weight;
+	int vertex_begin, vertex_end, weight;
 
-    bool operator()(const Edge &k1, const Edge &k2) {
-        if (k1.weight > k2.weight) return true;
-        if (k1.weight < k2.weight) return false;
-        return false;
-    }
+	bool operator()(const Edge& k1, const Edge& k2) {
+		if (k1.weight > k2.weight)
+			return true;
+		if (k1.weight < k2.weight)
+			return false;
+		return false;
+	}
 };
 
 #endif /* EDGE_HPP_ */
