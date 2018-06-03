@@ -8,7 +8,7 @@
 #include "ConsoleSupport.hpp"
 
 ConsoleSupport::ConsoleSupport() {
-
+	graph = NULL;
 }
 
 ConsoleSupport::~ConsoleSupport() {
@@ -38,6 +38,7 @@ void ConsoleSupport::start() {
 
 void ConsoleSupport::algorithms() {
 	int option;
+	int vertex_begin;
 	while (!to_begin) {
 		std::cout << std::endl << "Wybierz algorytm:" << std::endl
 				<< "1. Algorytm Prima" << std::endl << "2. Algorytm Dijkstry"

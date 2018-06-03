@@ -19,7 +19,6 @@ public:
 	virtual ~ConsoleSupport();
 
 	bool to_begin = true;
-	int vertex_begin;
 	Graph* graph;
 
 	void start();

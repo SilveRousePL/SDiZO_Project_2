@@ -4,6 +4,7 @@
  *  Created on: 2 maj 2018
  *      Author: darek
  */
+
 #include <iostream>
 #include "ConsoleSupport.hpp"
 
