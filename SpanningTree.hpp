@@ -23,6 +23,8 @@ public:
     SpanningTree(int vertex_number, int edge_number);
     ~SpanningTree();
     void addEdge(Edge e);
+    bool completedTree(int v);
+    int sumValues();
     void print();
 };
 

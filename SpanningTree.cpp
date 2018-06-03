@@ -53,6 +53,17 @@ void SpanningTree::addEdge(Edge e) {
 	a++;
 }
 
+bool SpanningTree::completedTree(int v) {
+	if ((v - 1) == edge_number)
+		return true;
+	else
+		return false;
+}
+
+int SpanningTree::sumValues() {
+	return weight;
+}
+
 void SpanningTree::print() {
 	std::cout << std::endl;
 	for (int i = 0; i < a; i++) {

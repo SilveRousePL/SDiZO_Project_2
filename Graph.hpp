@@ -14,6 +14,7 @@
 #include <cmath>
 #include <values.h>
 #include "Stack.hpp"
+#include "Queue.hpp"
 #include "SpanningTree.hpp"
 #include "ListElement.hpp"
 #include "Edge.hpp"
@@ -21,8 +22,8 @@
 
 class Graph {
 public:
-	Edge* E;
-	Edge* EO;
+	Edge* edges;
+	Edge* non_directed_edges;
 	int** incidence_matrix;
 	int** incidence_matrix_non_directed;
 	ListElement** adjacency_list;
@@ -38,10 +39,14 @@ public:
 	virtual ~Graph();
 
 	void PrimaMatrix();
-	void DijkstraMatrix(int w);
+	void KruskalMatrix(); //TODO
+	void DijkstraMatrix(int vertex);
+	void FordBellmanMatrix(int vertex); //TODO
 
 	void PrimaList();
-	void DijkstraList(int w);
+	void KruskalList(); //TODO
+	void DijkstraList(int vertex);
+	void FordBellmanList(int vertex); //TODO
 
 	bool checkIntegrity();
 	void randomGraph();

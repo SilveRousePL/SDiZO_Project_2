@@ -44,6 +44,7 @@ void ConsoleSupport::algorithms() {
 				<< "1. Algorytm Prima" << std::endl << "2. Algorytm Dijkstry"
 				<< std::endl << "3. Wyświetl graf w obu postaciach" << std::endl
 				<< "4. Wygeneruj inny graf" << std::endl;
+		std::cout << "6.kruskal\n7.ford belman" << std::endl;
 		std::cin.clear();
 		std::cin >> option;
 		switch (option) {
@@ -57,6 +58,24 @@ void ConsoleSupport::algorithms() {
 					graph->PrimaMatrix();
 				else if (option == 2)
 					graph->PrimaList();
+				else {
+					std::cout << "Nie ma takiej opcji!" << std::endl
+							<< std::endl;
+					continue;
+				}
+				break;
+			}
+			break;
+		case 6:
+			while (true) {
+				std::cout << "Jakiej reprezentacji użyć w algorytmie?"
+						<< std::endl << "1. Macierz Incydecji" << std::endl
+						<< "2. Lista poprzedników i następników" << std::endl;
+				std::cin >> option;
+				if (option == 1)
+					graph->KruskalMatrix();
+				else if (option == 2)
+					graph->KruskalList();
 				else {
 					std::cout << "Nie ma takiej opcji!" << std::endl
 							<< std::endl;
@@ -90,6 +109,39 @@ void ConsoleSupport::algorithms() {
 					graph->DijkstraMatrix(vertex_begin);
 				else if (option == 2)
 					graph->DijkstraList(vertex_begin);
+				else {
+					std::cout << "Nie ma takiej opcji!" << std::endl
+							<< std::endl;
+					continue;
+				}
+				break;
+			}
+			break;
+		case 7:
+			while (true) {
+				std::cout << "Zdefiniuj wierzchołek początkowy: ";
+				std::cin >> vertex_begin;
+				if (vertex_begin == -1)
+					return;
+				else if (vertex_begin >= graph->vertex_number
+						&& graph->vertex_number < 0) {
+					std::cout << "Graf nie zawiera wierzchołka o numerze "
+							<< vertex_begin << "." << std::endl
+							<< "Obecna ilość wierzchołków: "
+							<< graph->vertex_number << std::endl;
+
+				} else
+					break;
+			}
+			while (true) {
+				std::cout << "Jakiej reprezentacji użyć w algorytmie?"
+						<< std::endl << "1. Macierz Incydecji" << std::endl
+						<< "2. Lista poprzedników i następników" << std::endl;
+				std::cin >> option;
+				if (option == 1)
+					graph->FordBellmanMatrix(vertex_begin);
+				else if (option == 2)
+					graph->FordBellmanList(vertex_begin);
 				else {
 					std::cout << "Nie ma takiej opcji!" << std::endl
 							<< std::endl;
@@ -167,11 +219,12 @@ void ConsoleSupport::loadFile() {
 			} else {
 				graph = new Graph(vertex_number, edge_number);
 				while (!handle.eof() && a < edge_number) {
-					handle >> graph->E[a].vertex_begin >> graph->E[a].vertex_end
-							>> graph->E[a].weight;
-					if (graph->E[a].vertex_begin >= vertex_number
-							|| graph->E[a].vertex_end >= vertex_number
-							|| graph->E[a].weight < 1) {
+					handle >> graph->edges[a].vertex_begin
+							>> graph->edges[a].vertex_end
+							>> graph->edges[a].weight;
+					if (graph->edges[a].vertex_begin >= vertex_number
+							|| graph->edges[a].vertex_end >= vertex_number
+							|| graph->edges[a].weight < 1) {
 						std::cout
 								<< "Błąd wczytywania pliku: Krawędzie są nieprawidłowo określone"
 								<< std::endl;
@@ -201,11 +254,11 @@ void ConsoleSupport::loadFile() {
 						graph->adjacency_list[i] = NULL;
 
 					for (int i = 0; i < edge_number; i++) {
-						int wp = graph->E[i].vertex_begin;
-						int wk = graph->E[i].vertex_end;
+						int wp = graph->edges[i].vertex_begin;
+						int wk = graph->edges[i].vertex_end;
 						list_elem = new ListElement;
 						list_elem->vertex = wk;
-						list_elem->weight = graph->E[i].weight;
+						list_elem->weight = graph->edges[i].weight;
 						list_elem->next = graph->adjacency_list[wp];
 						graph->adjacency_list[wp] = list_elem;
 						graph->incidence_matrix[wp][i] = 1;

@@ -14,8 +14,8 @@ Graph::Graph(int vertex_number, int edge_number) {
 	incidence_matrix_non_directed = new int*[vertex_number];
 	adjacency_list = new ListElement*[vertex_number];
 	adjacency_list_non_directed = new ListElement*[vertex_number];
-	E = new Edge[edge_number];
-	EO = new Edge[edge_number];
+	edges = new Edge[edge_number];
+	non_directed_edges = new Edge[edge_number];
 	non_directed_edge_number = 0;
 	list_elem_1 = NULL;
 	list_elem_2 = NULL;
@@ -71,7 +71,7 @@ void Graph::PrimaMatrix() {
 	}
 	std::cout << std::endl << "   W:   ";
 	for (int i = 0; i < non_directed_edge_number; i++) {
-		std::cout << std::setw(4) << EO[i].weight;
+		std::cout << std::setw(4) << non_directed_edges[i].weight;
 	}
 	std::cout << std::endl << std::endl;
 	timer.startTimer();
@@ -87,7 +87,7 @@ void Graph::PrimaMatrix() {
 							&& !visited[j]) {
 						edge.vertex_begin = vertex;
 						edge.vertex_end = j;
-						edge.weight = EO[g].weight;
+						edge.weight = non_directed_edges[g].weight;
 						queue.push(edge);
 
 					}
@@ -172,8 +172,8 @@ void Graph::DijkstraMatrix(int vertex) {
 			if (incidence_matrix[root][i] != 0)
 				for (int j = 0; j < vertex_number; j++)
 					if (j != root && incidence_matrix[j][i] == -1 && !visited[j]
-							&& (costs[j] > costs[root] + E[i].weight)) {
-						costs[j] = costs[root] + E[i].weight;
+							&& (costs[j] > costs[root] + edges[i].weight)) {
+						costs[j] = costs[root] + edges[i].weight;
 						prevs[j] = root;
 
 						for (child = heap_position[j]; child; child = parent) {
@@ -430,9 +430,9 @@ void Graph::randomGraph() {
 	randomEdges();
 	changeToNonDirected();
 	for (int i = 0; i < edge_number; i++) {
-		int vertex_begin = E[i].vertex_begin;
-		int vertex_end = E[i].vertex_end;
-		int weight = E[i].weight;
+		int vertex_begin = edges[i].vertex_begin;
+		int vertex_end = edges[i].vertex_end;
+		int weight = edges[i].weight;
 		list_elem_1 = new ListElement;
 		list_elem_1->vertex = vertex_end;
 		list_elem_1->weight = weight;
@@ -477,13 +477,13 @@ void Graph::randomEdges() {
 		a--;
 		in_tree[c] = to_add_2;
 		c++;
-		E[i].vertex_begin = to_add_1;
-		E[i].vertex_end = to_add_2;
+		edges[i].vertex_begin = to_add_1;
+		edges[i].vertex_end = to_add_2;
 	}
 	for (int i = 0; i < (vertex_number - 1); i++) {
 
 		b = rand() % vertex_number;
-		std::swap(E[b].vertex_end, E[b].vertex_begin);
+		std::swap(edges[b].vertex_end, edges[b].vertex_begin);
 
 	}
 
@@ -502,7 +502,7 @@ void Graph::randomEdges() {
 
 			count_degree = 0;
 			for (int j = 0; j < i; j++) {
-				if (E[j].vertex_begin == to_add_1)
+				if (edges[j].vertex_begin == to_add_1)
 					count_degree++;
 				if (count_degree == vertex_number - 1)
 					break;
@@ -531,7 +531,8 @@ void Graph::randomEdges() {
 		a--;
 
 		for (int j = 0; j < i; j++) {
-			while (to_add_1 == E[j].vertex_begin && to_add_2 == E[j].vertex_end) {
+			while (to_add_1 == edges[j].vertex_begin
+					&& to_add_2 == edges[j].vertex_end) {
 				b = rand() % a;
 				to_add_2 = T[b];
 				T[b] = T[a - 1];
@@ -539,13 +540,13 @@ void Graph::randomEdges() {
 				j = 0;
 			}
 		}
-		E[i].vertex_begin = to_add_1;
-		E[i].vertex_end = to_add_2;
+		edges[i].vertex_begin = to_add_1;
+		edges[i].vertex_end = to_add_2;
 		delete[] T;
 	}
 
 	for (int i = 0; i < edge_number; i++)
-		E[i].weight = (rand() % 9) + 1;
+		edges[i].weight = (rand() % 9) + 1;
 
 	delete[] not_in_tree;
 	delete[] in_tree;
@@ -566,41 +567,46 @@ void Graph::changeToNonDirected() {
 		int j = 0;
 		while (j < non_directed_edge_number) {
 
-			if (EO[j].vertex_begin == E[i].vertex_begin
-					&& EO[j].vertex_end == E[i].vertex_end) {
+			if (non_directed_edges[j].vertex_begin == edges[i].vertex_begin
+					&& non_directed_edges[j].vertex_end
+							== edges[i].vertex_end) {
 				break;
 			} else
 				j++;
 		}
 		if (j == non_directed_edge_number) {
-			EO[non_directed_edge_number].vertex_begin = E[i].vertex_end;
-			EO[non_directed_edge_number].vertex_end = E[i].vertex_begin;
-			EO[non_directed_edge_number].weight = E[i].weight;
+			non_directed_edges[non_directed_edge_number].vertex_begin =
+					edges[i].vertex_end;
+			non_directed_edges[non_directed_edge_number].vertex_end =
+					edges[i].vertex_begin;
+			non_directed_edges[non_directed_edge_number].weight =
+					edges[i].weight;
 			non_directed_edge_number++;
 		}
 	}
 
 	int vertex_begin, vertex_end, weight;
 	for (int i = 0; i < non_directed_edge_number; i++) {
-		vertex_begin = EO[i].vertex_begin;
-		vertex_end = EO[i].vertex_end;
-		weight = EO[i].weight;
+		vertex_begin = non_directed_edges[i].vertex_begin;
+		vertex_end = non_directed_edges[i].vertex_end;
+		weight = non_directed_edges[i].weight;
 		list_elem_1 = new ListElement;
 		list_elem_1->vertex = vertex_end;
 		list_elem_1->weight = weight;
 		list_elem_1->next = adjacency_list_non_directed[vertex_begin];
 		adjacency_list_non_directed[vertex_begin] = list_elem_1;
 		list_elem_2 = new ListElement;
-		vertex_begin = EO[i].vertex_end;
-		vertex_end = EO[i].vertex_begin;
-		weight = EO[i].weight;
+		vertex_begin = non_directed_edges[i].vertex_end;
+		vertex_end = non_directed_edges[i].vertex_begin;
+		weight = non_directed_edges[i].weight;
 		list_elem_2->vertex = vertex_end;
 		list_elem_2->weight = weight;
 		list_elem_2->next = adjacency_list_non_directed[vertex_begin];
 		adjacency_list_non_directed[vertex_begin] = list_elem_2;
 
-		incidence_matrix_non_directed[EO[i].vertex_begin][i] = 1;
-		incidence_matrix_non_directed[EO[i].vertex_end][i] = 1;
+		incidence_matrix_non_directed[non_directed_edges[i].vertex_begin][i] =
+				1;
+		incidence_matrix_non_directed[non_directed_edges[i].vertex_end][i] = 1;
 	}
 }
 
@@ -630,7 +636,7 @@ void Graph::print() {
 	std::cout << std::endl;
 	std::cout << "   W:   ";
 	for (int i = 0; i < edge_number; i++) {
-		std::cout << std::setw(4) << E[i].weight;
+		std::cout << std::setw(4) << edges[i].weight;
 	}
 
 	std::cout << std::endl << std::endl << "Lista poprzedników i następników:"
@@ -645,4 +651,84 @@ void Graph::print() {
 		}
 		std::cout << std::endl;
 	}
+}
+
+void Graph::KruskalMatrix() {
+	Edge edge;
+	Queue queue;
+	SpanningTree* tree = new SpanningTree(vertex_number, edge_number);
+
+	for (int i = 0; i < edge_number; i++) {
+		for (int j = 0; j < vertex_number; j++) {
+			if (incidence_matrix[j][i] == 1) {
+				for (int n = j + 1; n < vertex_number; n++) {
+					if (incidence_matrix[n][i] == 1) {
+						queue.add(Edge(j, n, edges[i].weight));
+						n = vertex_number;
+					}
+				}
+			}
+		}
+	}
+
+	std::cout << std::endl << "ALGORYTM KRUSKALA" << std::endl;
+	queue.sortHeap();
+	while (tree->completedTree(vertex_number) == false) {
+		edge = queue.removeEdge();
+		tree->addEdge(edge);
+		std::cout << edge.vertex_begin << "-" << edge.vertex_end << ": "
+				<< edge.weight << std::endl;
+	}
+	std::cout << std::endl << "Suma wag:" << std::endl;
+	std::cout << tree->sumValues() << std::endl;
+}
+
+void Graph::FordBellmanMatrix(int vertex) {
+	int* tab = new int[vertex_number];	// wektor aktulanych wag
+	Edge edge;
+	for (int i = 0; i < vertex_number; i++) {
+		tab[i] = INT_MAX;
+	}
+
+	tab[vertex] = 0;
+	for (int i = 0; i < vertex_number - 1; i++) //tyle razy zeby znalezc jak najkrótsz¹ scie¿kê, -1 bo pomijamy startowy wierzcholek
+			{
+		for (int p = 0; p < vertex_number; p++)
+			for (int j = 0; j < edge_number; j++) {
+				if (incidence_matrix[p][j] == 1) {
+					for (int k = 0; k < vertex_number; k++) {
+						if (incidence_matrix[k][j] == -1) {
+							edge = Edge(p, k, edges[i].weight);
+
+							if (tab[edge.vertex_end]
+									> tab[edge.vertex_begin] + edge.weight) // jezeli dlugosc sciezki krotszej jest wieksza niz dlugosc sciezki po wiekszej ilosci krawedzi
+											{
+								tab[edge.vertex_end] = tab[edge.vertex_begin]
+										+ edge.weight;
+							}
+							k = vertex_number;
+						}
+					}
+				}
+			}
+	}
+	std::cout << std::endl << "ALGORYTM FORDA BELLMANA" << std::endl;
+	std::cout << std::endl << "Najkrotsze sciezki: " << std::endl;
+	for (int i = 0; i < vertex_number; i++) {
+		std::cout << std::setw(3) << vertex << "-" << i << ":";
+		if (tab[i] == 1000000) {
+			std::cout << std::setw(3) << "*" << std::endl;
+		} else {
+			std::cout << std::setw(3) << tab[i] << std::endl;
+		}
+	}
+	delete[] tab;
+}
+
+void Graph::KruskalList() {
+
+}
+
+void Graph::FordBellmanList(int vertex) {
+
 }
