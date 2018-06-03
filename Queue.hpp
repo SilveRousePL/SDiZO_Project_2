@@ -13,21 +13,21 @@
 
 class Queue
 {
-	std::vector<Edge> tab; //kolejka
-	std::vector<Edge> count_tab; //przechwuje elementy, które już wystšpiły
+	std::vector<Edge> tab;
+	std::vector<Edge> count_tab;
 	bool heap;
 
 public:
 	Queue();
 	virtual ~Queue();
 
-	void addEdge(Edge edge); //dodaje krawedzi
-	bool add(Edge edge); //dodaje krawedz po sprawdzeniu czy wystapila
-	void addAppeared(Edge edge); // dodaje krawedz do listy wystapien
-	void sortHeap(); //przywracania wlasnosci kopca min
-	Edge removeEdge(); //usuwa element
+	void addEdge(Edge edge);
+	bool add(Edge edge);
+	void addAppeared(Edge edge);
+	void sortHeap();
+	Edge removeEdge();
 
-	int size(); // rozmiar kolejki krawedzi
+	int size();
 	void showQueue();
 };
 

@@ -6,18 +6,21 @@
 CPP_SRCS += \
 ../ConsoleSupport.cpp \
 ../Graph.cpp \
+../Queue.cpp \
 ../SpanningTree.cpp \
 ../main.cpp 
 
 OBJS += \
 ./ConsoleSupport.o \
 ./Graph.o \
+./Queue.o \
 ./SpanningTree.o \
 ./main.o 
 
 CPP_DEPS += \
 ./ConsoleSupport.d \
 ./Graph.d \
+./Queue.d \
 ./SpanningTree.d \
 ./main.d 
 

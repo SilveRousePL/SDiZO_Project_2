@@ -1,6 +1,6 @@
 ConsoleSupport.o: ../ConsoleSupport.cpp ../ConsoleSupport.hpp \
- ../Graph.hpp ../Stack.hpp ../ListElement.hpp ../SpanningTree.hpp \
- ../Edge.hpp ../Timer.hpp
+ ../Graph.hpp ../Stack.hpp ../ListElement.hpp ../Queue.hpp ../Edge.hpp \
+ ../SpanningTree.hpp ../Timer.hpp
 
 ../ConsoleSupport.hpp:
 
@@ -10,8 +10,10 @@ ConsoleSupport.o: ../ConsoleSupport.cpp ../ConsoleSupport.hpp \
 
 ../ListElement.hpp:
 
-../SpanningTree.hpp:
+../Queue.hpp:
 
 ../Edge.hpp:
+
+../SpanningTree.hpp:
 
 ../Timer.hpp:

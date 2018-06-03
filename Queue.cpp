@@ -22,7 +22,7 @@ void Queue::addEdge(Edge edge) {
 
 bool Queue::add(Edge edge) {
 	heap = false;
-	for (int i = 0; i < count_tab.size(); i++) {
+	for (uint i = 0; i < count_tab.size(); i++) {
 		if ((count_tab[i].vertex_end == edge.vertex_end
 				&& count_tab[i].vertex_begin == edge.vertex_begin)
 				|| (count_tab[i].vertex_end == edge.vertex_begin
@@ -45,7 +45,7 @@ void Queue::sortHeap() {
 	int parent;
 	Edge edge;
 
-	for (int i = 1; i < tab.size(); i++) {
+	for (uint i = 1; i < tab.size(); i++) {
 		parent = ((i - 1) / 2);
 		edge = tab[i];
 
@@ -73,7 +73,7 @@ int Queue::size() {
 }
 
 void Queue::showQueue() {
-	for (int i = 0; i < tab.size(); i++) {
+	for (uint i = 0; i < tab.size(); i++) {
 		std::cout << "Poczatek krawedzi: " << tab[i].vertex_begin
 				<< " Koniec Krawedzi: " << tab[i].vertex_end << " Waga krawdzi"
 				<< tab[i].weight << std::endl;

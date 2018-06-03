@@ -20,6 +20,8 @@ Graph::Graph(int vertex_number, int edge_number) {
 	list_elem_1 = NULL;
 	list_elem_2 = NULL;
 	visited = NULL;
+	recently_time = 0;
+	density = -1;
 }
 
 Graph::~Graph() {
@@ -104,6 +106,7 @@ void Graph::PrimaMatrix() {
 
 	}
 	timer.stopTimer();
+	recently_time = timer.getTimeNs();
 	std::cout << "Czas wykonania: " << timer.getTimeNs() << std::endl;
 	std::cout << "Minimalne drzewo rozpinające:";
 	tree->print();
@@ -190,6 +193,7 @@ void Graph::DijkstraMatrix(int vertex) {
 		}
 	}
 	timer.stopTimer();
+	recently_time = timer.getTimeNs();
 	std::cout << std::endl << "Czas wykonania: " << timer.getTimeNs()
 			<< std::endl;
 	std::cout << "Najkrótsza ścieżka z wierzchołka " << vertex << ":"
@@ -263,6 +267,7 @@ void Graph::PrimaList() {
 	}
 
 	timer.stopTimer();
+	recently_time = timer.getTimeNs();
 	std::cout << std::endl << "Czas wykonania: " << timer.getTimeNs()
 			<< std::endl;
 	std::cout << "Minimalne drzewo rozpinające:";
@@ -351,6 +356,7 @@ void Graph::DijkstraList(int vertex) {
 				}
 	}
 	timer.stopTimer();
+	recently_time = timer.getTimeNs();
 	std::cout << std::endl << "Czas wykonania: " << timer.getTimeNs()
 			<< std::endl;
 	std::cout << "Najkrótsza ścieżka z wierzchołka " << vertex << ":"
@@ -610,6 +616,42 @@ void Graph::changeToNonDirected() {
 	}
 }
 
+void Graph::testAll(int vertex) {
+	std::fstream handle;
+	std::stringstream filename;
+	filename << "wyniki" << "V" << vertex_number << "D" << density << ".txt";
+	handle.open(filename.str(), std::ios::out);
+	if (!handle) {
+		std::cout << "Błąd zapisu do pliku!" << std::endl << std::endl;
+		return;
+	}
+	handle << std::endl << "PrimaMatrix: " << "V = " << vertex_number
+			<< "  D = " << density << std::endl;
+	for (int i = 0; i < 100; i++) {
+		this->PrimaMatrix();
+		handle << recently_time << std::endl;
+	}
+	handle << std::endl << "PrimaList: " << "V = " << vertex_number << "  D = "
+			<< density << std::endl;
+	for (int i = 0; i < 100; i++) {
+		this->PrimaList();
+		handle << recently_time << std::endl;
+	}
+	handle << std::endl << "DijkstraMatrix: " << "V = " << vertex_number
+			<< "  D = " << density << std::endl;
+	for (int i = 0; i < 100; i++) {
+		this->DijkstraMatrix(vertex);
+		handle << recently_time << std::endl;
+	}
+	handle << std::endl << "DijkstraList: " << "V = " << vertex_number
+			<< "  D = " << density << std::endl;
+	for (int i = 0; i < 100; i++) {
+		this->DijkstraList(vertex);
+		handle << recently_time << std::endl;
+	}
+
+}
+
 void Graph::print() {
 	std::cout << "Macierz incydencji:" << std::endl;
 	std::cout << "   V | E";
@@ -653,82 +695,84 @@ void Graph::print() {
 	}
 }
 
-void Graph::KruskalMatrix() {
-	Edge edge;
-	Queue queue;
-	SpanningTree* tree = new SpanningTree(vertex_number, edge_number);
+/*
+ void Graph::KruskalMatrix() {
+ Edge edge;
+ Queue queue;
+ SpanningTree* tree = new SpanningTree(vertex_number, edge_number);
 
-	for (int i = 0; i < edge_number; i++) {
-		for (int j = 0; j < vertex_number; j++) {
-			if (incidence_matrix[j][i] == 1) {
-				for (int n = j + 1; n < vertex_number; n++) {
-					if (incidence_matrix[n][i] == 1) {
-						queue.add(Edge(j, n, edges[i].weight));
-						n = vertex_number;
-					}
-				}
-			}
-		}
-	}
+ for (int i = 0; i < non_directed_edge_number; i++) {
+ for (int j = 0; j < vertex_number; j++) {
+ if (incidence_matrix_non_directed[j][i] == 1) {
+ for (int n = j + 1; n < vertex_number; n++) {
+ if (incidence_matrix_non_directed[n][i] == 1) {
+ queue.add(Edge(j, n, edges[i].weight));
+ n = vertex_number;
+ }
+ }
+ }
+ }
+ }
 
-	std::cout << std::endl << "ALGORYTM KRUSKALA" << std::endl;
-	queue.sortHeap();
-	while (tree->completedTree(vertex_number) == false) {
-		edge = queue.removeEdge();
-		tree->addEdge(edge);
-		std::cout << edge.vertex_begin << "-" << edge.vertex_end << ": "
-				<< edge.weight << std::endl;
-	}
-	std::cout << std::endl << "Suma wag:" << std::endl;
-	std::cout << tree->sumValues() << std::endl;
-}
+ std::cout << std::endl << "ALGORYTM KRUSKALA" << std::endl;
+ queue.sortHeap();
+ while (tree->completedTree(vertex_number) == false) {
+ edge = queue.removeEdge();
+ tree->addEdge(edge);
+ std::cout << edge.vertex_begin << "-" << edge.vertex_end << ": "
+ << edge.weight << std::endl;
+ }
+ std::cout << std::endl << "Suma wag:" << std::endl;
+ std::cout << tree->sumValues() << std::endl;
+ }
 
-void Graph::FordBellmanMatrix(int vertex) {
-	int* tab = new int[vertex_number];	// wektor aktulanych wag
-	Edge edge;
-	for (int i = 0; i < vertex_number; i++) {
-		tab[i] = INT_MAX;
-	}
+ void Graph::FordBellmanMatrix(int vertex) {
+ int* tab = new int[vertex_number];	// wektor aktulanych wag
+ Edge edge;
+ for (int i = 0; i < vertex_number; i++) {
+ tab[i] = INT_MAX;
+ }
 
-	tab[vertex] = 0;
-	for (int i = 0; i < vertex_number - 1; i++) //tyle razy zeby znalezc jak najkrótsz¹ scie¿kê, -1 bo pomijamy startowy wierzcholek
-			{
-		for (int p = 0; p < vertex_number; p++)
-			for (int j = 0; j < edge_number; j++) {
-				if (incidence_matrix[p][j] == 1) {
-					for (int k = 0; k < vertex_number; k++) {
-						if (incidence_matrix[k][j] == -1) {
-							edge = Edge(p, k, edges[i].weight);
+ tab[vertex] = 0;
+ for (int i = 0; i < vertex_number - 1; i++) //tyle razy zeby znalezc jak najkrótsz¹ scie¿kê, -1 bo pomijamy startowy wierzcholek
+ {
+ for (int p = 0; p < vertex_number; p++)
+ for (int j = 0; j < edge_number; j++) {
+ if (incidence_matrix[p][j] == 1) {
+ for (int k = 0; k < vertex_number; k++) {
+ if (incidence_matrix[k][j] == -1) {
+ edge = Edge(p, k, edges[i].weight);
 
-							if (tab[edge.vertex_end]
-									> tab[edge.vertex_begin] + edge.weight) // jezeli dlugosc sciezki krotszej jest wieksza niz dlugosc sciezki po wiekszej ilosci krawedzi
-											{
-								tab[edge.vertex_end] = tab[edge.vertex_begin]
-										+ edge.weight;
-							}
-							k = vertex_number;
-						}
-					}
-				}
-			}
-	}
-	std::cout << std::endl << "ALGORYTM FORDA BELLMANA" << std::endl;
-	std::cout << std::endl << "Najkrotsze sciezki: " << std::endl;
-	for (int i = 0; i < vertex_number; i++) {
-		std::cout << std::setw(3) << vertex << "-" << i << ":";
-		if (tab[i] == 1000000) {
-			std::cout << std::setw(3) << "*" << std::endl;
-		} else {
-			std::cout << std::setw(3) << tab[i] << std::endl;
-		}
-	}
-	delete[] tab;
-}
+ if (tab[edge.vertex_end]
+ > tab[edge.vertex_begin] + edge.weight) // jezeli dlugosc sciezki krotszej jest wieksza niz dlugosc sciezki po wiekszej ilosci krawedzi
+ {
+ tab[edge.vertex_end] = tab[edge.vertex_begin]
+ + edge.weight;
+ }
+ k = vertex_number;
+ }
+ }
+ }
+ }
+ }
+ std::cout << std::endl << "ALGORYTM FORDA BELLMANA" << std::endl;
+ std::cout << std::endl << "Najkrotsze sciezki: " << std::endl;
+ for (int i = 0; i < vertex_number; i++) {
+ std::cout << std::setw(3) << vertex << "-" << i << ":";
+ if (tab[i] == 1000000) {
+ std::cout << std::setw(3) << "*" << std::endl;
+ } else {
+ std::cout << std::setw(3) << tab[i] << std::endl;
+ }
+ }
+ delete[] tab;
+ }
 
-void Graph::KruskalList() {
+ void Graph::KruskalList() {
 
-}
+ }
 
-void Graph::FordBellmanList(int vertex) {
+ void Graph::FordBellmanList(int vertex) {
 
-}
+ }
+ */

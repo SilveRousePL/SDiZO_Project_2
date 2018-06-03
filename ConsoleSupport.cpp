@@ -43,8 +43,9 @@ void ConsoleSupport::algorithms() {
 		std::cout << std::endl << "Wybierz algorytm:" << std::endl
 				<< "1. Algorytm Prima" << std::endl << "2. Algorytm Dijkstry"
 				<< std::endl << "3. Wyświetl graf w obu postaciach" << std::endl
-				<< "4. Wygeneruj inny graf" << std::endl;
-		std::cout << "6.kruskal\n7.ford belman" << std::endl;
+				<< "4. Wygeneruj inny graf" << std::endl << "5. Testuj wszystko"
+				<< std::endl;
+		//std::cout << "6.kruskal\n7.ford belman" << std::endl;
 		std::cin.clear();
 		std::cin >> option;
 		switch (option) {
@@ -66,24 +67,24 @@ void ConsoleSupport::algorithms() {
 				break;
 			}
 			break;
-		case 6:
-			while (true) {
-				std::cout << "Jakiej reprezentacji użyć w algorytmie?"
-						<< std::endl << "1. Macierz Incydecji" << std::endl
-						<< "2. Lista poprzedników i następników" << std::endl;
-				std::cin >> option;
-				if (option == 1)
-					graph->KruskalMatrix();
-				else if (option == 2)
-					graph->KruskalList();
-				else {
-					std::cout << "Nie ma takiej opcji!" << std::endl
-							<< std::endl;
-					continue;
-				}
-				break;
-			}
-			break;
+			/*case 6:
+			 while (true) {
+			 std::cout << "Jakiej reprezentacji użyć w algorytmie?"
+			 << std::endl << "1. Macierz Incydecji" << std::endl
+			 << "2. Lista poprzedników i następników" << std::endl;
+			 std::cin >> option;
+			 if (option == 1)
+			 graph->KruskalMatrix();
+			 else if (option == 2)
+			 graph->KruskalList();
+			 else {
+			 std::cout << "Nie ma takiej opcji!" << std::endl
+			 << std::endl;
+			 continue;
+			 }
+			 break;
+			 }
+			 break;*/
 		case 2:
 			while (true) {
 				std::cout << "Zdefiniuj wierzchołek początkowy: ";
@@ -117,9 +118,51 @@ void ConsoleSupport::algorithms() {
 				break;
 			}
 			break;
-		case 7:
+			/*case 7:
+			 while (true) {
+			 std::cout << "Zdefiniuj wierzchołek początkowy: ";
+			 std::cin >> vertex_begin;
+			 if (vertex_begin == -1)
+			 return;
+			 else if (vertex_begin >= graph->vertex_number
+			 && graph->vertex_number < 0) {
+			 std::cout << "Graf nie zawiera wierzchołka o numerze "
+			 << vertex_begin << "." << std::endl
+			 << "Obecna ilość wierzchołków: "
+			 << graph->vertex_number << std::endl;
+
+			 } else
+			 break;
+			 }
+			 while (true) {
+			 std::cout << "Jakiej reprezentacji użyć w algorytmie?"
+			 << std::endl << "1. Macierz Incydecji" << std::endl
+			 << "2. Lista poprzedników i następników" << std::endl;
+			 std::cin >> option;
+			 if (option == 1)
+			 graph->FordBellmanMatrix(vertex_begin);
+			 else if (option == 2)
+			 graph->FordBellmanList(vertex_begin);
+			 else {
+			 std::cout << "Nie ma takiej opcji!" << std::endl
+			 << std::endl;
+			 continue;
+			 }
+			 break;
+			 }
+			 break;*/
+		case 3:
+			graph->print();
+			std::cout << std::endl;
+			break;
+		case 4:
+			delete graph;
+			to_begin = true;
+			break;
+		case 5:
 			while (true) {
-				std::cout << "Zdefiniuj wierzchołek początkowy: ";
+				std::cout
+						<< "Zdefiniuj wierzchołek początkowy dla algorytmów wyszukiwania najkrótszej ścieżki: ";
 				std::cin >> vertex_begin;
 				if (vertex_begin == -1)
 					return;
@@ -133,30 +176,7 @@ void ConsoleSupport::algorithms() {
 				} else
 					break;
 			}
-			while (true) {
-				std::cout << "Jakiej reprezentacji użyć w algorytmie?"
-						<< std::endl << "1. Macierz Incydecji" << std::endl
-						<< "2. Lista poprzedników i następników" << std::endl;
-				std::cin >> option;
-				if (option == 1)
-					graph->FordBellmanMatrix(vertex_begin);
-				else if (option == 2)
-					graph->FordBellmanList(vertex_begin);
-				else {
-					std::cout << "Nie ma takiej opcji!" << std::endl
-							<< std::endl;
-					continue;
-				}
-				break;
-			}
-			break;
-		case 3:
-			graph->print();
-			std::cout << std::endl;
-			break;
-		case 4:
-			delete graph;
-			to_begin = true;
+			graph->testAll(vertex_begin);
 			break;
 		}
 	}
@@ -191,6 +211,7 @@ void ConsoleSupport::randomGraph() {
 	double edges = ceil((max_edge * density) / 100);
 	graph = new Graph(vertex_number, edges);
 	graph->randomGraph();
+	graph->density = density;
 }
 
 void ConsoleSupport::loadFile() {
